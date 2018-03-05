@@ -141,7 +141,7 @@ class SLURMCluster:
         while not done:
             # Poll for job state
             t0_poll = time()
-            is_running = self.job_state(job_id) == "RUNNING"
+            is_running = self.get_job_state(job_id) == "RUNNING"
             
             # Compute timing
             poll_elapsed = time() - t0_poll
