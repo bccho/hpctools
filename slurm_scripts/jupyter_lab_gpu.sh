@@ -6,8 +6,11 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --ntasks-per-socket=1
 #SBATCH --gres=gpu:1
-##SBATCH --output='/home/tdp/lab/code/slurm/jupyter_lab_gpu.log'
+#SBATCH -o '/tigress/bccho/logs/jupyter_lab_gpu.out'
+#SBATCH -e '/tigress/bccho/logs/jupyter_lab_gpu.err'
 #SBATCH --job-name='jupyter_lab_gpu'
+
+source activate interactive
 
 
 XDG_RUNTIME_DIR="" # important so that jupyter starts temp dir with correct permissions
@@ -16,7 +19,7 @@ XDG_RUNTIME_DIR="" # important so that jupyter starts temp dir with correct perm
 ip=$(hostname -i)
 port=${1:-9010}
 # port=$(shuf -i9010-9020 -n1)
-notebook_dir="$HOME/lab/code"
+notebook_dir="/tigress/bccho/code"
 
 # Save connection info
 json_path="$(pwd)/jupyter_lab.$port.json"
@@ -25,7 +28,7 @@ echo -e "
 {
     \"ip\": \"$ip\",
     \"port\": \"$port\",
-    \"cmd\": \"ssh -N -o \\\"ExitOnForwardFailure yes\\\" -L $port:$ip:$port tdp@$SLURM_SUBMIT_HOST\",
+    \"cmd\": \"ssh -N -o \\\"ExitOnForwardFailure yes\\\" -L $port:$ip:$port bccho@$SLURM_SUBMIT_HOST\",
     \"notebook_dir\": \"$notebook_dir\",
     \"json_path\": \"$json_path\",
     \"submit_host\": \"$SLURM_SUBMIT_HOST\",
