@@ -121,7 +121,7 @@ class JupyterCluster(SLURMCluster):
         """ Finds ssh tunnels to specified job port and returns their process ids. """
         
         # Find ssh processes
-        ssh_proc_info = [p.info for p in psutil.process_iter(attrs=["pid", "name", "cmdline"]) if "ssh" in p.info["name"]]
+        ssh_proc_info = [p.info for p in psutil.process_iter(attrs=["pid", "name", "cmdline"]) if isinstance(p.info["name"], str) and "ssh" in p.info["name"]]
 
         # Filter PIDs by ssh loopback arg to our job port
         pids = []
