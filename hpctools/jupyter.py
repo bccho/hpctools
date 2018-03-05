@@ -10,7 +10,7 @@ from .ssh import SLURMCluster
 class JupyterCluster(SLURMCluster):
     """ Manages Jupyter Lab notebook server jobs that are forwarded over reverse SSH. """
     
-    def __init__(self, host, user, slurm_scripts_path="$HOME/lab/code/slurm", job_port=9010):
+    def __init__(self, host, user, slurm_scripts_path="$HOME/lab/code/hpctools/slurm_scripts", job_port=9010):
         """
         Args:
             host: cluster address
@@ -45,7 +45,7 @@ class JupyterCluster(SLURMCluster):
         """ Returns True if there is an running job for a given notebook port. """
         
         # Check job metadata
-        if self.update_metadata or self.metadata is None:
+        if update_metadata or self.metadata is None:
             meta = self.get_notebook_metadata()
         
         # Check if job is running through SLURM
@@ -75,8 +75,9 @@ class JupyterCluster(SLURMCluster):
         # Submit job
         job_id = self.submit_job(
             script_path=job_script,
+            script_args=self.job_port,
             working_directory=self.slurm_scripts_path,
-            script_args=self.metadata["job_port"]
+            slurm_args='--output="jupyter_lab_gpu.%s.log"' % self.job_port,
         )
         
         # Block until it runs

@@ -37,15 +37,18 @@ class SLURMCluster:
         # Return outputs
         return proc.stdout
     
-    def submit_job(self, script_path, script_args=[], working_directory="$HOME"):
+    def submit_job(self, script_path, script_args=[], slurm_args=[], working_directory="$HOME"):
         """ Submits a job via sbatch and returns the job ID. """
         
         if type(script_args) == list:
             script_args = " ".join(script_args)
             
+        if type(slurm_args) == list:
+            slurm_args = " ".join(slurm_args)
+
         out = self.run_cmd([
             "cd \"%s\"" % working_directory,
-            "sbatch " + script_path + " " + script_args
+            "sbatch " + slurm_args + " " + script_path + " " + script_args
         ])
         
         if not "Submitted batch job" in out:
