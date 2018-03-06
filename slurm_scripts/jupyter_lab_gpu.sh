@@ -10,7 +10,9 @@
 #SBATCH -e '/tigress/bccho/logs/jupyter_lab_gpu.err'
 #SBATCH --job-name='jupyter_lab_gpu'
 
-source activate interactive
+if [ "$#" -ge 2 ]; then
+    source activate $2
+fi
 
 
 XDG_RUNTIME_DIR="" # important so that jupyter starts temp dir with correct permissions
