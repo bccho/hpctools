@@ -76,8 +76,7 @@ class JupyterCluster(SLURMCluster):
         job_id = self.submit_job(
             script_path=job_script,
             script_args=self.job_port,
-            working_directory=self.slurm_scripts_path,
-            slurm_args='--output="jupyter_lab_gpu.%s.log"' % self.job_port,
+            working_directory=self.slurm_scripts_path
         )
         
         # Block until it runs
@@ -92,7 +91,7 @@ class JupyterCluster(SLURMCluster):
                 self.kill_tunnels()
                 
                 # Start tunnel in background
-                proc = subprocess.Popen(self.metadata["cmd"],
+                proc = subprocess.Popen(self.metadata["cmd"], shell=True,
                           stdout=subprocess.PIPE,
                           stderr=subprocess.STDOUT,
                           encoding="utf8")
